@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.cramonk.spring.boot_security.dto.UserDto;
 import ru.cramonk.spring.boot_security.entity.User;
 import ru.cramonk.spring.boot_security.service.UserService;
 
@@ -24,7 +25,8 @@ public class UserController {
     @GetMapping(value = "")
     public String getUser(Principal principal, Model model) {
         User user = userService.findByUsername(principal.getName());
-        model.addAttribute("user", user);
+        UserDto userDto = UserDto.toDto(user);
+        model.addAttribute("user", userDto);
         return "user";
     }
 

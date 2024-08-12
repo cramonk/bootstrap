@@ -37,16 +37,7 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
-
-    @Transient
-    private String addedRole;
-    @Transient
-    private List<String> roleNames;
-    public List<String> getListOfRoleNames() {
-        return roles.stream().map(Role::getName).map(s -> s.replace("ROLE_", "")).collect(Collectors.toList());
-    }
-
+    private List<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

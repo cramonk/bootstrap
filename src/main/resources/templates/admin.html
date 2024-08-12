@@ -20,7 +20,7 @@
             <div class="flex-fill">
                 <b th:text="${user.email}" class="text-light"></b>
                 <span class="text-light"> with roles: </span>
-                <span th:text="${#strings.listJoin(user.getListOfRoleNames(), ' ')}" class="text-light"></span>
+                <span th:text="${#strings.listJoin(user.getRoleNames(), ' ')}" class="text-light"></span>
             </div>
             <form class="d-flex" action="#" th:action="@{/logout}" method="get">
                 <button class="btn btn-dark" type="submit" style="color: #6c757d">Logout</button>
@@ -91,20 +91,19 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        <tr th:each="user, itemStat : ${users}">
+                                                        <tr th:each="user : ${users}">
                                                             <td th:text="${user.getId()}"></td>
                                                             <td th:text="${user.getFirstName()}"></td>
                                                             <td th:text="${user.getLastName()}"></td>
                                                             <td th:text="${user.getAge()}"></td>
                                                             <td th:text="${user.getEmail()}"></td>
-                                                            <td th:text="${#strings.listJoin(user.getListOfRoleNames(), ' ')}"></td>
-
+                                                            <td th:text="${#strings.listJoin(user.getRoleNames(), ' ')}"></td>
                                                             <td>
                                                                 <input type="button" class="btn-primary btn-edit rounded"   value="Edit" data-bs-toggle="modal"
-                                                                       th:data-bs-target="'#edit'+${user.id}"/>
+                                                                       th:data-bs-target="'#edit'+${user.getId()}"/>
                                                                 <!-- Modal edit-->
                                                                 <form  method="POST" action="#" th:action="@{/admin/update}" th:object="${user}" class="col-12 w-25 text-center justify-content-center">
-                                                                    <div class="modal fade" th:id="'edit'+${user.id}" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
+                                                                    <div class="modal fade" th:id="'edit'+${user.getId()}" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
                                                                         <div class="modal-dialog">
                                                                             <div class="modal-content">
                                                                                 <div class="modal-header">
@@ -142,8 +141,8 @@
 
                                                                                     <div class="row">
                                                                                         <label for="edit_select" class="form-label fw-bold">Role</label>
-                                                                                        <select required th:name="addedRole" th:value="${user.getAddedRole()}" th:size="2" id="edit_select">
-                                                                                            <option th:each="role:${allRoles}" th:value="${role}" th:text="${role.replace('ROLE_', '')}">
+                                                                                        <select th:field="*{roleNames}" th:size="2" id="edit_select" required multiple>
+                                                                                            <option th:each="role:${allRoles}" th:value="${role}" th:text="${role}">
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -161,10 +160,10 @@
 
                                                             <td>
                                                                 <input type="button" class="btn-danger rounded"   value="Delete" data-bs-toggle="modal"
-                                                                       th:data-bs-target="'#delete'+${user.id}"/>
+                                                                       th:data-bs-target="'#delete'+${user.getId()}"/>
                                                                 <!-- Modal delete-->
                                                                 <form class="col-12 text-center " method="POST" action="#" th:action="@{/admin/delete}" th:object="${user}" >
-                                                                    <div class="modal fade" th:id="'delete'+${user.id}" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true">
+                                                                    <div class="modal fade" th:id="'delete'+${user.getId()}" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true">
                                                                         <div class="modal-dialog">
                                                                             <div class="modal-content">
                                                                                 <div class="modal-header">
@@ -198,8 +197,8 @@
 
                                                                                     <div class="row">
                                                                                         <label for="delete_select" class="form-label fw-bold">Role</label>
-                                                                                        <select  class="form-select" th:name="addedRole" th:value="${user.getAddedRole()}" th:size="2" disabled  id="delete_select">
-                                                                                            <option th:each="role:${allRoles}"  th:value="${role}"  th:text="${role.replace('ROLE_', '')}">
+                                                                                        <select  class="form-select" th:name="addedRoles" th:value="*{roleNames}" th:size="2" disabled  id="delete_select">
+                                                                                            <option th:each="role:${allRoles}"  th:value="${role}"  th:text="${role}">
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -214,7 +213,6 @@
                                                                     </div>
                                                                 </form>
                                                             </td>
-
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -239,32 +237,32 @@
                                             <form th:method="POST" th:action="@{/admin/new}" th:object="${user}" class="col-12 w-25 text-center mb-3">
                                                 <div class="row">
                                                     <label for="first_name" class="form-label fw-bold">First name</label>
-                                                    <input  type="text" th:field="*{firstName}"  class="form-control h-50" id="first_name" required placeholder="First name" >
+                                                    <input  type="text" th:name="firstName"   class="form-control h-50" id="first_name" required placeholder="First name" >
                                                 </div>
 
                                                 <div class="row ">
                                                     <label for="last_name" class="form-label  fw-bold ">Last name</label>
-                                                    <input  type="text" th:field="*{lastName}" class="form-control  h-50 " id="last_name" required placeholder="Last name" >
+                                                    <input  type="text" th:name="lastName"  class="form-control  h-50 " id="last_name" required placeholder="Last name" >
                                                 </div>
 
                                                 <div class="row ">
                                                     <label for="age" class="form-label fw-bold ">Age</label>
-                                                    <input  type="number" th:field="*{age}" class="form-control h-50" id="age" required placeholder="Age" >
+                                                    <input  type="number" th:name="age"  class="form-control h-50" id="age" required placeholder="Age" >
                                                 </div>
 
                                                 <div class="row">
                                                     <label for="email" class="form-label fw-bold">Email</label>
-                                                    <input  type="email" th:field="*{email}" class="form-control h-50" id="email" required placeholder="Email" >
+                                                    <input  type="email" th:name="email"  class="form-control h-50" id="email" required placeholder="Email" >
                                                 </div>
 
                                                 <div class="row">
                                                     <label for="password" class="form-label fw-bold">Password</label>
-                                                    <input required type="password" th:field="*{password}" class="form-control h-50" id="password" placeholder="Password">
+                                                    <input required type="password" th:name="password"  class="form-control h-50" id="password" placeholder="Password">
                                                 </div>
 
                                                 <div class="row">
                                                     <label for="select" class="form-label fw-bold">Role</label>
-                                                    <select th:field="*{addedRole}" th:size="2" id="select" required>
+                                                    <select th:field="*{roleNames}" th:size="2" id="select" required multiple>
                                                         <option th:each="role:${allRoles}" th:value="${role}" th:text="${role}">
                                                         </option>
                                                     </select>
@@ -310,8 +308,8 @@
                                                 <td th:text="${user.getFirstName()}"></td>
                                                 <td th:text="${user.getLastName()}"></td>
                                                 <td th:text="${user.getAge()}"></td>
-                                                <td th:text="${user.getUsername()}"></td>
-                                                <td th:text="${#strings.listJoin(user.getListOfRoleNames(), ' ')}"></td>
+                                                <td th:text="${user.getEmail()}"></td>
+                                                <td th:text="${#strings.listJoin(user.getRoleNames(), ' ')}"></td>
                                             </tbody>
                                         </table>
 

@@ -18,7 +18,7 @@
             <div class="flex-fill">
                 <b th:text="${user.email}" class="text-light"></b>
                 <span class="text-light"> with roles: </span>
-                <span th:text="${#strings.listJoin(user.getListOfRoleNames(), ' ')}" class="text-light"></span>
+                <span th:text="${#strings.listJoin(user.getRoleNames(), ' ')}" class="text-light"></span>
             </div>
             <form class="d-flex" action="#" th:action="@{/logout}" method="get">
                 <button class="btn btn-dark custom-btn" type="submit" style="color: #6c757d">Logout</button>
@@ -70,8 +70,8 @@
                     <td th:text="${user.getFirstName()}"></td>
                     <td th:text="${user.getLastName()}"></td>
                     <td th:text="${user.getAge()}"></td>
-                    <td th:text="${user.getUsername()}"></td>
-                    <td th:text="${#strings.listJoin(user.getListOfRoleNames(), ' ')}"></td>
+                    <td th:text="${user.getEmail()}"></td>
+                    <td th:text="${#strings.listJoin(user.getRoleNames(), ' ')}"></td>
                 </tbody>
             </table>
 
